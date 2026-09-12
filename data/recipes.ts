@@ -1,3 +1,9 @@
+export interface Ingrediente {
+  nombre: string;
+  cantidadBase: number; // Cantidad para las porciones base (ej. 12)
+  unidad: string;
+}
+
 export interface PasoReceta {
   numero: number;
   accion: string;
@@ -12,6 +18,8 @@ export interface Receta {
   tiempo: string;
   dificultad: string;
   badge: string;
+  porcionesBase: number;
+  ingredientes: Ingrediente[];
   pasos: PasoReceta[];
 }
 
@@ -23,6 +31,15 @@ export const RECETAS_BRUJITOS: Receta[] = [
     tiempo: "45 min",
     dificultad: "Fácil",
     badge: "Favorito Otoño 🍂",
+    porcionesBase: 12,
+    ingredientes: [
+      { nombre: "Harina de trigo repostera", cantidadBase: 250, unidad: "g" },
+      { nombre: "Mantequilla sin sal (pomada)", cantidadBase: 115, unidad: "g" },
+      { nombre: "Azúcar moreno", cantidadBase: 100, unidad: "g" },
+      { nombre: "Puré de calabaza cocida", cantidadBase: 80, unidad: "g" },
+      { nombre: "Especias (canela, jengibre, nuez moscada)", cantidadBase: 5, unidad: "g" },
+      { nombre: "Polvo para hornear", cantidadBase: 4, unidad: "g" },
+    ],
     pasos: [
       {
         numero: 1,
@@ -57,6 +74,13 @@ export const RECETAS_BRUJITOS: Receta[] = [
     tiempo: "60 min",
     dificultad: "Media",
     badge: "Especial Brujitos 👻",
+    porcionesBase: 12,
+    ingredientes: [
+      { nombre: "Claras de huevo frescas", cantidadBase: 100, unidad: "g" },
+      { nombre: "Azúcar blanco refinado", cantidadBase: 200, unidad: "g" },
+      { nombre: "Esencia de vainilla pura", cantidadBase: 5, unidad: "ml" },
+      { nombre: "Chocolate negro fundido (ojitos)", cantidadBase: 30, unidad: "g" },
+    ],
     pasos: [
       {
         numero: 1,

@@ -2,15 +2,20 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sparkles, Clock, Flame, Play, ChevronRight, CheckCircle2 } from "lucide-react";
+import { Sparkles, Clock, Flame, Play, ChevronRight, CheckCircle2, Scale, ChefHat } from "lucide-react";
 import { RECETAS_BRUJITOS, Receta } from "../data/recipes";
 
 export default function Home() {
   const [recetaActiva, setRecetaActiva] = useState<Receta>(RECETAS_BRUJITOS[0]);
   const [pasoIndex, setPasoIndex] = useState(0);
+  const [porcionesSeleccionadas, setPorcionesSeleccionadas] = useState<number>(12);
+  const [vistaActiva, setVistaActiva] = useState<"pasos" | "ingredientes">("pasos");
 
   const pasoActual = recetaActiva.pasos[pasoIndex];
   const esUltimoPaso = pasoIndex === recetaActiva.pasos.length - 1;
+
+  // Factor multiplicador según porción elegida (ej. 6, 12, 24)
+  const factorEscala = porcionesSeleccionadas / recetaActiva.porcionesBase;
 
   const handleSiguientePaso = () => {
     if (!esUltimoPaso) {
@@ -44,7 +49,7 @@ export default function Home() {
         </div>
       </header>
 
-      {/* Píldoras para cambiar de receta */}
+      {/* Selector de Recetas */}
       <div className="max-w-6xl mx-auto mt-8 flex gap-3 overflow-x-auto pb-2">
         {RECETAS_BRUJITOS.map((receta) => (
           <button
@@ -52,8 +57,9 @@ export default function Home() {
             onClick={() => {
               setRecetaActiva(receta);
               setPasoIndex(0);
+              setPorcionesSeleccionadas(receta.porcionesBase);
             }}
-            className={`px-4 py-2 rounded-2xl text-xs font-bold transition-all whitespace-nowrap border ${
+            className={`px-4 py-2 rounded-2xl text-xs font-bold transition-all whitespace-nowrap border cursor-pointer ${
               recetaActiva.id === receta.id
                 ? "bg-ghibli-pumpkin text-white border-ghibli-pumpkin shadow-md shadow-ghibli-pumpkin/20"
                 : "bg-white/70 text-ghibli-ink/70 border-ghibli-sand hover:bg-white"
@@ -64,10 +70,10 @@ export default function Home() {
         ))}
       </div>
 
-      {/* Grid del Visualizador */}
+      {/* Grid Principal */}
       <div className="max-w-6xl mx-auto mt-6 grid grid-cols-1 lg:grid-cols-12 gap-8">
         
-        {/* Lado Izquierdo: Descripción y Lista de Pasos */}
+        {/* Lado Izquierdo: Ficha técnica y Selector de Ingredientes / Pasos */}
         <div className="lg:col-span-5 flex flex-col gap-6">
           <motion.div
             key={recetaActiva.id}
@@ -97,39 +103,120 @@ export default function Home() {
             </div>
           </motion.div>
 
-          {/* Selector de Pasos */}
-          <div className="flex flex-col gap-2.5 mt-2">
-            <span className="text-xs font-bold text-ghibli-ink/50 uppercase tracking-wider">
-              Pasos de preparación
-            </span>
-            {recetaActiva.pasos.map((paso, idx) => (
-              <motion.button
-                key={paso.numero}
-                onClick={() => setPasoIndex(idx)}
-                whileHover={{ x: 6 }}
-                whileTap={{ scale: 0.98 }}
-                className={`p-4 rounded-2xl text-left transition-all border ${
-                  pasoIndex === idx
-                    ? "bg-white border-ghibli-pumpkin/60 shadow-md shadow-ghibli-pumpkin/10"
-                    : "bg-ghibli-sand/50 border-transparent hover:bg-white/60"
-                }`}
-              >
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-ghibli-terracotta">
-                    Paso 0{paso.numero}
-                  </span>
-                  {pasoIndex === idx && (
-                    <motion.div layoutId="activeStepIndicator">
-                      <Play className="w-3.5 h-3.5 fill-ghibli-pumpkin text-ghibli-pumpkin" />
-                    </motion.div>
-                  )}
-                </div>
-                <p className="text-sm font-semibold mt-1 text-ghibli-ink">
-                  {paso.accion}
-                </p>
-              </motion.button>
-            ))}
+          {/* Switch Pasos vs Ingredientes */}
+          <div className="flex items-center gap-2 bg-ghibli-sand/60 p-1.5 rounded-2xl">
+            <button
+              onClick={() => setVistaActiva("pasos")}
+              className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
+                vistaActiva === "pasos"
+                  ? "bg-white text-ghibli-ink shadow-sm"
+                  : "text-ghibli-ink/60 hover:text-ghibli-ink"
+              }`}
+            >
+              <ChefHat className="w-4 h-4 text-ghibli-pumpkin" />
+              Pasos ({recetaActiva.pasos.length})
+            </button>
+            <button
+              onClick={() => setVistaActiva("ingredientes")}
+              className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
+                vistaActiva === "ingredientes"
+                  ? "bg-white text-ghibli-ink shadow-sm"
+                  : "text-ghibli-ink/60 hover:text-ghibli-ink"
+              }`}
+            >
+              <Scale className="w-4 h-4 text-ghibli-terracotta" />
+              Ingredientes ({recetaActiva.ingredientes.length})
+            </button>
           </div>
+
+          {/* Contenido Condicional: Pasos o Ingredientes */}
+          <AnimatePresence mode="wait">
+            {vistaActiva === "pasos" ? (
+              <motion.div
+                key="vista-pasos"
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                className="flex flex-col gap-2.5"
+              >
+                {recetaActiva.pasos.map((paso, idx) => (
+                  <motion.button
+                    key={paso.numero}
+                    onClick={() => setPasoIndex(idx)}
+                    whileHover={{ x: 6 }}
+                    whileTap={{ scale: 0.98 }}
+                    className={`p-4 rounded-2xl text-left transition-all border cursor-pointer ${
+                      pasoIndex === idx
+                        ? "bg-white border-ghibli-pumpkin/60 shadow-md shadow-ghibli-pumpkin/10"
+                        : "bg-ghibli-sand/50 border-transparent hover:bg-white/60"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-bold text-ghibli-terracotta">
+                        Paso 0{paso.numero}
+                      </span>
+                      {pasoIndex === idx && (
+                        <motion.div layoutId="activeStepIndicator">
+                          <Play className="w-3.5 h-3.5 fill-ghibli-pumpkin text-ghibli-pumpkin" />
+                        </motion.div>
+                      )}
+                    </div>
+                    <p className="text-sm font-semibold mt-1 text-ghibli-ink">
+                      {paso.accion}
+                    </p>
+                  </motion.button>
+                ))}
+              </motion.div>
+            ) : (
+              <motion.div
+                key="vista-ingredientes"
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                className="flex flex-col gap-4 bg-white/70 backdrop-blur-sm p-5 rounded-2xl border border-ghibli-sand"
+              >
+                {/* Control de Porciones */}
+                <div className="flex items-center justify-between pb-3 border-b border-ghibli-ink/10">
+                  <span className="text-xs font-bold text-ghibli-ink/70">
+                    Ajustar porciones:
+                  </span>
+                  <div className="flex gap-2">
+                    {[6, 12, 24].map((cant) => (
+                      <button
+                        key={cant}
+                        onClick={() => setPorcionesSeleccionadas(cant)}
+                        className={`px-3 py-1 rounded-lg text-xs font-extrabold transition-all cursor-pointer ${
+                          porcionesSeleccionadas === cant
+                            ? "bg-ghibli-terracotta text-white shadow-sm"
+                            : "bg-ghibli-sand/80 text-ghibli-ink/70 hover:bg-ghibli-sand"
+                        }`}
+                      >
+                        {cant}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Lista de Gramajes Calculados */}
+                <div className="flex flex-col gap-2.5">
+                  {recetaActiva.ingredientes.map((ing, i) => {
+                    const cantidadCalculada = Math.round(ing.cantidadBase * factorEscala * 10) / 10;
+                    return (
+                      <div
+                        key={i}
+                        className="flex items-center justify-between text-sm py-1.5 border-b border-ghibli-sand/50 last:border-0"
+                      >
+                        <span className="text-ghibli-ink/80 font-medium">{ing.nombre}</span>
+                        <span className="font-mono font-bold text-ghibli-pumpkin">
+                          {cantidadCalculada} {ing.unidad}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
         {/* Lado Derecho: Cinema de Animación Ghibli */}
@@ -150,7 +237,7 @@ export default function Home() {
               </button>
             </div>
 
-            {/* Canvas de Animación (Micro-loop Ghibli) */}
+            {/* Micro-loop Canvas */}
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
               <AnimatePresence mode="wait">
                 <motion.div
@@ -181,7 +268,7 @@ export default function Home() {
               </AnimatePresence>
             </div>
 
-            {/* Banner de Instrucción Táctil */}
+            {/* Banner de Instrucción */}
             <AnimatePresence mode="wait">
               <motion.div
                 key={`${recetaActiva.id}-${pasoActual?.numero}-detalle`}
