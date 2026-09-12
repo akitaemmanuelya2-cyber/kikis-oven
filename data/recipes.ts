@@ -1,6 +1,6 @@
 export interface Ingrediente {
   nombre: string;
-  cantidadBase: number; // Cantidad para las porciones base (ej. 12)
+  cantidadBase: number;
   unidad: string;
 }
 
@@ -9,6 +9,7 @@ export interface PasoReceta {
   accion: string;
   detalle: string;
   colorAcento: string;
+  videoUrl?: string; // Ruta al clip o video en bucle
 }
 
 export interface Receta {
@@ -46,24 +47,28 @@ export const RECETAS_BRUJITOS: Receta[] = [
         accion: "Batir mantequilla y azúcar moreno",
         detalle: "Bate enérgicamente hasta que la mezcla cambie de color a un dorado pálido y suave como crema pastelera.",
         colorAcento: "#F3A261",
+        videoUrl: "https://assets.mixkit.co/videos/48858/48858-720.mp4", // Micro-loop demostrativo de mezcla
       },
       {
         numero: 2,
         accion: "Incorporar el puré de calabaza",
         detalle: "Añade el puré tibio junto a una pizca de canela y jengibre en polvo. Verás formarse remolinos aromáticos.",
         colorAcento: "#E28771",
+        videoUrl: "https://assets.mixkit.co/videos/24434/24434-720.mp4", // Micro-loop vertido cálido
       },
       {
         numero: 3,
         accion: "Tamizar la harina en lluvia lenta",
         detalle: "Pasa la harina por el tamiz suavemente sobre el tazón, creando una fina neblina blanca que integraremos con espátula.",
         colorAcento: "#A3B18A",
+        videoUrl: "https://assets.mixkit.co/videos/42838/42838-720.mp4", // Micro-loop tamizado
       },
       {
         numero: 4,
         accion: "Moldear y hornear a 180°C",
         detalle: "Forma discos con pequeñas muescas de calabaza y llévalas al calor del horno hasta que los bordes doren ligeramente.",
         colorAcento: "#CDB4DB",
+        videoUrl: "https://assets.mixkit.co/videos/43110/43110-720.mp4", // Micro-loop horneado
       },
     ],
   },
@@ -87,6 +92,7 @@ export const RECETAS_BRUJITOS: Receta[] = [
         accion: "Montar claras a punto de nieve",
         detalle: "Bate las claras con paciencia hasta levantar picos firmes y satinados como nieve fresca.",
         colorAcento: "#CDB4DB",
+        videoUrl: "https://assets.mixkit.co/videos/48858/48858-720.mp4",
       },
       {
         numero: 2,

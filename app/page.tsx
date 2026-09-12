@@ -14,7 +14,6 @@ export default function Home() {
   const pasoActual = recetaActiva.pasos[pasoIndex];
   const esUltimoPaso = pasoIndex === recetaActiva.pasos.length - 1;
 
-  // Factor multiplicador según porción elegida (ej. 6, 12, 24)
   const factorEscala = porcionesSeleccionadas / recetaActiva.porcionesBase;
 
   const handleSiguientePaso = () => {
@@ -73,7 +72,7 @@ export default function Home() {
       {/* Grid Principal */}
       <div className="max-w-6xl mx-auto mt-6 grid grid-cols-1 lg:grid-cols-12 gap-8">
         
-        {/* Lado Izquierdo: Ficha técnica y Selector de Ingredientes / Pasos */}
+        {/* Lado Izquierdo: Ficha técnica y Selector */}
         <div className="lg:col-span-5 flex flex-col gap-6">
           <motion.div
             key={recetaActiva.id}
@@ -129,7 +128,7 @@ export default function Home() {
             </button>
           </div>
 
-          {/* Contenido Condicional: Pasos o Ingredientes */}
+          {/* Contenido Dinámico */}
           <AnimatePresence mode="wait">
             {vistaActiva === "pasos" ? (
               <motion.div
@@ -175,7 +174,6 @@ export default function Home() {
                 exit={{ opacity: 0, y: -8 }}
                 className="flex flex-col gap-4 bg-white/70 backdrop-blur-sm p-5 rounded-2xl border border-ghibli-sand"
               >
-                {/* Control de Porciones */}
                 <div className="flex items-center justify-between pb-3 border-b border-ghibli-ink/10">
                   <span className="text-xs font-bold text-ghibli-ink/70">
                     Ajustar porciones:
@@ -197,7 +195,6 @@ export default function Home() {
                   </div>
                 </div>
 
-                {/* Lista de Gramajes Calculados */}
                 <div className="flex flex-col gap-2.5">
                   {recetaActiva.ingredientes.map((ing, i) => {
                     const cantidadCalculada = Math.round(ing.cantidadBase * factorEscala * 10) / 10;
@@ -219,69 +216,73 @@ export default function Home() {
           </AnimatePresence>
         </div>
 
-        {/* Lado Derecho: Cinema de Animación Ghibli */}
+        {/* Lado Derecho: Cinema de Animación Ghibli con Video Vivo */}
         <div className="lg:col-span-7">
-          <div className="relative w-full aspect-[4/3] rounded-3xl overflow-hidden bg-gradient-to-br from-ghibli-sand to-white border border-ghibli-sand shadow-xl shadow-ghibli-ink/5 flex flex-col justify-between p-6">
+          <div className="relative w-full aspect-[4/3] rounded-3xl overflow-hidden bg-gradient-to-br from-ghibli-sand to-white border border-ghibli-sand shadow-2xl shadow-ghibli-pumpkin/5 flex flex-col justify-between p-6 group">
             
             {/* Cabecera del Cinema */}
-            <div className="flex items-center justify-between z-10">
-              <span className="text-xs font-bold bg-white/80 backdrop-blur-sm px-3 py-1 rounded-full text-ghibli-ink/70">
+            <div className="flex items-center justify-between z-20">
+              <span className="text-xs font-bold bg-white/85 backdrop-blur-md px-3.5 py-1.5 rounded-full text-ghibli-ink/80 border border-white/50 shadow-sm">
                 Paso {pasoIndex + 1} de {recetaActiva.pasos.length}
               </span>
               <button
                 onClick={handleSiguientePaso}
-                className="flex items-center gap-1 text-xs font-bold bg-ghibli-pumpkin text-white px-3 py-1.5 rounded-full hover:bg-ghibli-terracotta transition-colors shadow-sm cursor-pointer"
+                className="flex items-center gap-1.5 text-xs font-bold bg-ghibli-pumpkin text-white px-4 py-1.5 rounded-full hover:bg-ghibli-terracotta transition-all shadow-sm cursor-pointer hover:scale-105 active:scale-95"
               >
                 {esUltimoPaso ? "Reiniciar" : "Siguiente"}
                 <ChevronRight className="w-3.5 h-3.5" />
               </button>
             </div>
 
-            {/* Micro-loop Canvas */}
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+            {/* Visor Multimedia Cinematográfico */}
+            <div className="absolute inset-0 z-0 overflow-hidden bg-ghibli-sand">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={`${recetaActiva.id}-${pasoActual?.numero}`}
-                  initial={{ opacity: 0, scale: 0.9 }}
+                  initial={{ opacity: 0, scale: 1.05 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 1.05 }}
-                  transition={{ duration: 0.45, ease: "easeOut" }}
-                  className="w-full h-full flex flex-col items-center justify-center text-center p-8"
+                  exit={{ opacity: 0, scale: 0.98 }}
+                  transition={{ duration: 0.6, ease: "easeInOut" }}
+                  className="relative w-full h-full"
                 >
-                  <div
-                    className="w-32 h-32 rounded-full border-4 border-dashed flex items-center justify-center mb-4 animate-[spin_20s_linear_infinite]"
-                    style={{ borderColor: pasoActual?.colorAcento || "#F3A261" }}
-                  >
-                    <Sparkles
-                      className="w-10 h-10 animate-bounce"
-                      style={{ color: pasoActual?.colorAcento || "#F3A261" }}
+                  {pasoActual?.videoUrl ? (
+                    <video
+                      src={pasoActual.videoUrl}
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      className="w-full h-full object-cover filter contrast-[1.05] brightness-[1.02] saturate-[1.1]"
                     />
-                  </div>
-                  
-                  <span className="text-base font-bold text-ghibli-ink/80">
-                    {pasoActual?.accion}
-                  </span>
-                  <span className="text-xs text-ghibli-ink/40 mt-1 font-mono tracking-wide">
-                    [ Micro-Loop Ghibli • Cámara Lenta ]
-                  </span>
+                  ) : (
+                    /* Fallback artístico */
+                    <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-ghibli-sand/60 to-white text-ghibli-ink/30">
+                      <Sparkles className="w-12 h-12 mb-2 animate-pulse text-ghibli-pumpkin" />
+                      <span className="text-xs font-mono">[ Ilustración en preparación ]</span>
+                    </div>
+                  )}
+
+                  {/* Viñeta de Acuarela Orgánica: funde los bordes del video en el lienzo cálido */}
+                  <div className="absolute inset-0 pointer-events-none shadow-[inset_0_0_80px_rgba(255,249,240,0.85)]" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-ghibli-cream/90 via-transparent to-black/10 pointer-events-none" />
                 </motion.div>
               </AnimatePresence>
             </div>
 
-            {/* Banner de Instrucción */}
+            {/* Banner de Instrucción Flotante */}
             <AnimatePresence mode="wait">
               <motion.div
                 key={`${recetaActiva.id}-${pasoActual?.numero}-detalle`}
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.25 }}
-                className="relative z-10 bg-white/90 backdrop-blur-md p-4 rounded-2xl border border-white/60 shadow-md"
+                transition={{ duration: 0.3 }}
+                className="relative z-20 bg-white/85 backdrop-blur-md p-4 md:p-5 rounded-2xl border border-white/70 shadow-lg"
               >
-                <div className="flex items-center gap-2 mb-1">
+                <div className="flex items-center gap-2 mb-1.5">
                   <CheckCircle2 className="w-4 h-4 text-ghibli-pumpkin" />
                   <span className="text-xs font-black uppercase text-ghibli-pumpkin tracking-wider">
-                    En la cocina
+                    {pasoActual?.accion}
                   </span>
                 </div>
                 <p className="text-sm text-ghibli-ink/90 leading-relaxed font-medium">
