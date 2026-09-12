@@ -47,15 +47,16 @@ export const RECETAS_BRUJITOS: Receta[] = [
         accion: "Batir mantequilla y azúcar moreno",
         detalle: "Bate enérgicamente hasta que la mezcla cambie de color a un dorado pálido y suave como crema pastelera.",
         colorAcento: "#F3A261",
-        videoUrl: "https://assets.mixkit.co/videos/48858/48858-720.mp4", // Micro-loop demostrativo de mezcla
+        videoUrl: "/animations/mantequilla-azucar.mp4", // Clip animado Ghibli local
       },
       {
         numero: 2,
         accion: "Incorporar el puré de calabaza",
         detalle: "Añade el puré tibio junto a una pizca de canela y jengibre en polvo. Verás formarse remolinos aromáticos.",
         colorAcento: "#E28771",
-        videoUrl: "https://assets.mixkit.co/videos/24434/24434-720.mp4", // Micro-loop vertido cálido
+        // Los dejamos sin video o con fallback por ahora
       },
+      // ... resto de pasos
       {
         numero: 3,
         accion: "Tamizar la harina en lluvia lenta",
