@@ -247,11 +247,13 @@ export default function Home() {
                 >
                   {pasoActual?.videoUrl ? (
                     <video
+                      key={pasoActual.videoUrl}
                       src={pasoActual.videoUrl}
                       autoPlay
                       loop
                       muted
                       playsInline
+                      preload="auto"
                       className="w-full h-full object-cover filter contrast-[1.05] brightness-[1.02] saturate-[1.1]"
                     />
                   ) : (
