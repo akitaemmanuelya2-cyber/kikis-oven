@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sparkles, Clock, Flame, Play, ChevronRight, CheckCircle2, Scale, ChefHat } from "lucide-react";
 import { RECETAS_BRUJITOS, Receta } from "../data/recipes";
+import GhibliAtmosphere from "../components/GhibliAtmosphere";
 
 export default function Home() {
   const [recetaActiva, setRecetaActiva] = useState<Receta>(RECETAS_BRUJITOS[0]);
@@ -25,7 +26,9 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen bg-ghibli-cream text-ghibli-ink px-4 py-8 md:px-12 selection:bg-ghibli-pumpkin/30">
+    <main className="min-h-screen bg-[#FFF9F2] text-[#2C2420] px-4 py-8 md:px-12 selection:bg-[#E07A5F]/20 relative">
+      <GhibliAtmosphere />
+      {/* Header */}
       {/* Encabezado */}
       <header className="max-w-6xl mx-auto flex items-center justify-between pb-8 border-b border-ghibli-ink/10">
         <div className="flex items-center gap-3">
