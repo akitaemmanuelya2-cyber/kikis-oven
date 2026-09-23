@@ -54,7 +54,7 @@ export const RECETAS_BRUJITOS: Receta[] = [
         accion: "Incorporar el puré de calabaza",
         detalle: "Añade el puré tibio junto a una pizca de canela y jengibre en polvo. Verás formarse remolinos aromáticos.",
         colorAcento: "#E28771",
-        // Los dejamos sin video o con fallback por ahora
+        videoUrl: "/animations/pure-calabaza.mp4",
       },
       // ... resto de pasos
       {
@@ -62,14 +62,14 @@ export const RECETAS_BRUJITOS: Receta[] = [
         accion: "Tamizar la harina en lluvia lenta",
         detalle: "Pasa la harina por el tamiz suavemente sobre el tazón, creando una fina neblina blanca que integraremos con espátula.",
         colorAcento: "#A3B18A",
-        videoUrl: "https://assets.mixkit.co/videos/42838/42838-720.mp4", // Micro-loop tamizado
+        videoUrl: "/animations/tamizar-harina.mp4",
       },
       {
         numero: 4,
         accion: "Moldear y hornear a 180°C",
         detalle: "Forma discos con pequeñas muescas de calabaza y llévalas al calor del horno hasta que los bordes doren ligeramente.",
         colorAcento: "#CDB4DB",
-        videoUrl: "https://assets.mixkit.co/videos/43110/43110-720.mp4", // Micro-loop horneado
+        videoUrl: "/animations/moldear-hornear.mp4",
       },
     ],
   },
