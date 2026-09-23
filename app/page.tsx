@@ -28,7 +28,7 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-[#FFF9F2] text-[#2C2420] px-4 py-8 md:px-12 selection:bg-[#E07A5F]/20 relative">
       <GhibliAtmosphere />
-      {/* Header */}
+      
       {/* Encabezado */}
       <header className="max-w-6xl mx-auto flex items-center justify-between pb-8 border-b border-ghibli-ink/10">
         <div className="flex items-center gap-3">
@@ -228,6 +228,7 @@ export default function Home() {
               <span className="text-xs font-bold bg-white/85 backdrop-blur-md px-3.5 py-1.5 rounded-full text-ghibli-ink/80 border border-white/50 shadow-sm">
                 Paso {pasoIndex + 1} de {recetaActiva.pasos.length}
               </span>
+
               <button
                 onClick={handleSiguientePaso}
                 className="flex items-center gap-1.5 text-xs font-bold bg-ghibli-pumpkin text-white px-4 py-1.5 rounded-full hover:bg-ghibli-terracotta transition-all shadow-sm cursor-pointer hover:scale-105 active:scale-95"
@@ -269,32 +270,34 @@ export default function Home() {
 
                   {/* Viñeta de Acuarela Orgánica: funde los bordes del video en el lienzo cálido */}
                   <div className="absolute inset-0 pointer-events-none shadow-[inset_0_0_80px_rgba(255,249,240,0.85)]" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-ghibli-cream/90 via-transparent to-black/10 pointer-events-none" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-ghibli-cream/30 via-transparent to-black/10 pointer-events-none" />
                 </motion.div>
               </AnimatePresence>
             </div>
 
-            {/* Banner de Instrucción Flotante */}
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={`${recetaActiva.id}-${pasoActual?.numero}-detalle`}
-                initial={{ opacity: 0, y: 15 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.3 }}
-                className="relative z-20 bg-white/85 backdrop-blur-md p-4 md:p-5 rounded-2xl border border-white/70 shadow-lg"
-              >
-                <div className="flex items-center gap-2 mb-1.5">
-                  <CheckCircle2 className="w-4 h-4 text-ghibli-pumpkin" />
-                  <span className="text-xs font-black uppercase text-ghibli-pumpkin tracking-wider">
-                    {pasoActual?.accion}
-                  </span>
-                </div>
-                <p className="text-sm text-ghibli-ink/90 leading-relaxed font-medium">
-                  {pasoActual?.detalle}
-                </p>
-              </motion.div>
-            </AnimatePresence>
+            {/* Banner de Instrucción Flotante (Más compacto, estilizado y anclado a la derecha) */}
+            <div className="relative z-20 flex justify-end pointer-events-none mt-auto">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={`${recetaActiva.id}-${pasoActual?.numero}-detalle`}
+                  initial={{ opacity: 0, y: 15, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                  transition={{ duration: 0.3 }}
+                  className="pointer-events-auto w-full max-w-xs bg-white/90 backdrop-blur-md p-3.5 md:p-4 rounded-2xl border border-white/80 shadow-xl"
+                >
+                  <div className="flex items-center gap-1.5 mb-1">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-ghibli-pumpkin shrink-0" />
+                    <span className="text-[11px] font-black uppercase text-ghibli-pumpkin tracking-wider truncate">
+                      {pasoActual?.accion}
+                    </span>
+                  </div>
+                  <p className="text-xs text-ghibli-ink/90 leading-relaxed font-medium">
+                    {pasoActual?.detalle}
+                  </p>
+                </motion.div>
+              </AnimatePresence>
+            </div>
 
           </div>
         </div>
