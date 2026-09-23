@@ -71,6 +71,13 @@ export const RECETAS_BRUJITOS: Receta[] = [
         colorAcento: "#CDB4DB",
         videoUrl: "/animations/moldear-hornear.mp4",
       },
+      {
+         numero: 5,
+         accion: "¡Horno listo y resultado mágico!",
+         detalle: "Las galletas doran su base mientras emanan un vapor cálido y hogareño. ¡Listas para disfrutar con Kiki!",
+         colorAcento: "#E28771",
+         videoUrl: "/animations/resultado-horno.mp4",
+}
     ],
   },
   {
