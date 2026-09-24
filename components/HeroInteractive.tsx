@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { Sparkles, Utensils, HeartHandshake, BookOpen } from "lucide-react";
+import Image from "next/image";
 
 interface HeroProps {
   onSelectTab: (tab: "recetas" | "historia" | "apoyar") => void;
@@ -16,108 +17,114 @@ const TABS = [
 ] as const;
 
 export default function HeroInteractive({ onSelectTab, activeTab }: HeroProps) {
+  // Valores del mouse para el efecto 3D Parallax estilo MotionSites
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  // Físicas suaves de resorte (spring)
+  const springConfig = { damping: 25, stiffness: 120 };
+  const smoothX = useSpring(mouseX, springConfig);
+  const smoothY = useSpring(mouseY, springConfig);
+
+  // Transformaciones de ángulo e inclinación según la posición del cursor
+  const rotateX = useTransform(smoothY, [-0.5, 0.5], [6, -6]);
+  const rotateY = useTransform(smoothX, [-0.5, 0.5], [-8, 8]);
+  const translateX = useTransform(smoothX, [-0.5, 0.5], [-12, 12]);
+  const translateY = useTransform(smoothY, [-0.5, 0.5], [-8, 8]);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const xPct = (e.clientX - rect.left) / rect.width - 0.5;
+    const yPct = (e.clientY - rect.top) / rect.height - 0.5;
+    mouseX.set(xPct);
+    mouseY.set(yPct);
+  };
+
+  const handleMouseLeave = () => {
+    mouseX.set(0);
+    mouseY.set(0);
+  };
+
   return (
-    <section className="relative w-full min-h-[460px] md:min-h-[520px] rounded-[2.5rem] bg-gradient-to-b from-[#FFF3E3] via-[#FFE8D6] to-[#FFF9F2] border border-[#F3A261]/20 shadow-2xl shadow-[#E07A5F]/10 overflow-hidden flex flex-col items-center justify-between p-6 md:p-10 mb-10">
+    <section 
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      className="relative w-full rounded-[2.5rem] bg-gradient-to-b from-[#FFF3E3] via-[#FFE8D6] to-[#FFF9F2] border border-[#F3A261]/25 shadow-2xl shadow-[#E07A5F]/10 overflow-hidden flex flex-col items-center justify-between p-6 md:p-10 mb-10 perspective-[1000px]"
+    >
       
-      {/* 1. Fondo vivo: Ondas de calor y partículas suaves */}
+      {/* 1. Fondo vivo: Resplandor de calor pulsante */}
       <motion.div
         animate={{
-          scale: [1, 1.08, 1],
-          opacity: [0.35, 0.55, 0.35],
+          scale: [1, 1.1, 1],
+          opacity: [0.3, 0.5, 0.3],
         }}
         transition={{
-          duration: 8,
+          duration: 7,
           repeat: Infinity,
           ease: "easeInOut",
         }}
-        className="absolute -top-24 w-96 h-96 rounded-full bg-gradient-to-tr from-[#F3A261]/40 to-[#E07A5F]/20 blur-3xl pointer-events-none"
+        className="absolute -top-20 w-[500px] h-[500px] rounded-full bg-gradient-to-tr from-[#F3A261]/40 to-[#E07A5F]/20 blur-3xl pointer-events-none"
       />
 
-      {/* 2. Encabezado con tipografía cinemática */}
-      <div className="relative z-10 text-center max-w-2xl mx-auto">
+      {/* 2. Textos del Lobby */}
+      <div className="relative z-20 text-center max-w-2xl mx-auto pointer-events-none">
         <motion.div
-          initial={{ opacity: 0, y: -10 }}
+          initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
-          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/70 backdrop-blur-md border border-[#E07A5F]/20 text-xs font-bold text-[#E07A5F] mb-4 shadow-sm"
+          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/80 backdrop-blur-md border border-[#E07A5F]/20 text-xs font-bold text-[#E07A5F] mb-3 shadow-xs"
         >
           <Sparkles className="w-3.5 h-3.5 text-[#F3A261] animate-spin" />
-          <span>Panadería Mágica de Autor</span>
+          <span>El Mostrador de Io</span>
         </motion.div>
 
         <motion.h2
-          initial={{ opacity: 0, y: 15 }}
+          initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1, duration: 0.6 }}
+          transition={{ delay: 0.1, duration: 0.5 }}
           className="text-3xl md:text-5xl font-black tracking-tight text-[#2C2420] leading-tight"
         >
-          Masa lenta, aroma tibio y la magia de{" "}
+          Pan crujiente, alma lenta y la calidez de{" "}
           <span className="text-[#E07A5F] underline decoration-[#F3A261]/40 decoration-wavy">
             Io
           </span>
         </motion.h2>
-
-        <motion.p
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.6 }}
-          className="mt-3 text-xs md:text-sm text-[#2C2420]/70 max-w-md mx-auto leading-relaxed"
-        >
-          Aprende los secretos del trigo, la mantequilla pomada y el punto exacto de dorado en una cocina que respira.
-        </motion.p>
       </div>
 
-      {/* 3. Escenario central: Representación artística viva de Io */}
-      <div className="relative z-10 my-4 flex items-center justify-center">
-        <motion.div
-          animate={{
-            y: [0, -8, 0],
-          }}
-          transition={{
-            duration: 5,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-          className="relative flex flex-col items-center"
-        >
-          {/* Aura cálida tras Io */}
-          <div className="absolute w-44 h-44 rounded-full bg-[#F3A261]/25 blur-2xl -z-10" />
+      {/* 3. Escenario 3D Interactivo con Io */}
+      <motion.div
+        style={{
+          rotateX,
+          rotateY,
+          x: translateX,
+          y: translateY,
+          transformStyle: "preserve-3d",
+        }}
+        className="relative z-10 my-6 w-full max-w-lg aspect-square md:aspect-[4/3] rounded-3xl overflow-hidden border-4 border-white/90 shadow-2xl bg-[#FFE4CE] flex items-end justify-center group"
+      >
+        {/* Imagen principal de Io generada por Morgan */}
+        <Image
+          src="/images/io-baker.png"
+          alt="Io la Panadera en el mostrador"
+          fill
+          priority
+          className="object-cover object-center filter contrast-[1.03] brightness-[1.01] transition-transform duration-700 group-hover:scale-105"
+        />
 
-          {/* Avatar / Tarjeta de Io con estilo Glassmorphism */}
-          <div className="w-36 h-36 md:w-44 md:h-44 rounded-full border-4 border-white bg-gradient-to-tr from-[#F8D5B8] to-[#FFF9F2] shadow-xl flex items-center justify-center relative overflow-hidden group">
-            {/* Aquí situaremos la ilustración final de Io; por ahora, una composición estilizada */}
-            <div className="text-center p-3">
-              <span className="text-4xl md:text-5xl block animate-bounce">👩🏻‍🍳</span>
-              <span className="text-[11px] font-black uppercase tracking-wider text-[#E07A5F] mt-1 block">
-                Io la Panadera
-              </span>
-            </div>
+        {/* Viñeta cálida en los bordes para fundir la imagen con la interfaz */}
+        <div className="absolute inset-0 pointer-events-none shadow-[inset_0_0_60px_rgba(255,243,227,0.7)]" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#2C2420]/40 via-transparent to-transparent pointer-events-none" />
 
-            {/* Micro-humo interactivo saliendo del delantal de Io */}
-            <motion.div
-              animate={{ y: [-5, -25], opacity: [0, 0.7, 0], scale: [0.8, 1.2] }}
-              transition={{ repeat: Infinity, duration: 2.5, ease: "easeOut" }}
-              className="absolute top-4 text-xs select-none pointer-events-none text-white/90"
-            >
-              ♨️
-            </motion.div>
-          </div>
+        {/* Badge flotante dinámico */}
+        <div className="absolute bottom-4 z-20 bg-white/90 backdrop-blur-md px-4 py-1.5 rounded-full border border-white/80 shadow-md flex items-center gap-2 text-xs font-extrabold text-[#2C2420]">
+          <span className="w-2 h-2 rounded-full bg-green-500 animate-ping" />
+          {activeTab === "recetas" && "¡Hojaldres recién salidos!"}
+          {activeTab === "historia" && "Revisando el cuaderno de notas"}
+          {activeTab === "apoyar" && "Agradeciendo cada cafecito"}
+        </div>
+      </motion.div>
 
-          {/* Badge reactivo al estado actual */}
-          <motion.div
-            key={activeTab}
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            className="mt-3 bg-white/90 backdrop-blur-md px-3.5 py-1 rounded-full border border-[#F3A261]/30 shadow-md text-[11px] font-bold text-[#2C2420]"
-          >
-            {activeTab === "recetas" && "🥖 Amasando delicias hoy"}
-            {activeTab === "historia" && "📖 Anotando notas en su diario"}
-            {activeTab === "apoyar" && "☕ Recibiendo harina y cariño"}
-          </motion.div>
-        </motion.div>
-      </div>
-
-      {/* 4. Navegación en pastilla flotante elástica (estilo MotionSites) */}
-      <div className="relative z-10 w-full max-w-md bg-white/70 backdrop-blur-xl p-1.5 rounded-full border border-white/80 shadow-lg shadow-[#E07A5F]/5 flex items-center justify-between">
+      {/* 4. Barra de navegación elástica */}
+      <div className="relative z-20 w-full max-w-md bg-white/80 backdrop-blur-xl p-1.5 rounded-full border border-white/90 shadow-lg shadow-[#E07A5F]/5 flex items-center justify-between">
         {TABS.map((tab) => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;
