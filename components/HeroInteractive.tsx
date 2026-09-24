@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { Sparkles, Utensils, HeartHandshake, BookOpen } from "lucide-react";
 import Image from "next/image";
@@ -17,20 +16,22 @@ const TABS = [
 ] as const;
 
 export default function HeroInteractive({ onSelectTab, activeTab }: HeroProps) {
-  // Valores del mouse para el efecto 3D Parallax estilo MotionSites
+  // Valores reactivos del mouse para el Parallax orgánico
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
   // Físicas suaves de resorte (spring)
-  const springConfig = { damping: 25, stiffness: 120 };
+  const springConfig = { damping: 30, stiffness: 140 };
   const smoothX = useSpring(mouseX, springConfig);
   const smoothY = useSpring(mouseY, springConfig);
 
-  // Transformaciones de ángulo e inclinación según la posición del cursor
-  const rotateX = useTransform(smoothY, [-0.5, 0.5], [6, -6]);
-  const rotateY = useTransform(smoothX, [-0.5, 0.5], [-8, 8]);
-  const translateX = useTransform(smoothX, [-0.5, 0.5], [-12, 12]);
-  const translateY = useTransform(smoothY, [-0.5, 0.5], [-8, 8]);
+  // Movimiento exclusivo para Io (ella se mueve e inclina sutilmente)
+  const ioRotate = useTransform(smoothX, [-0.5, 0.5], [-4, 4]);
+  const ioTranslateX = useTransform(smoothX, [-0.5, 0.5], [-24, 24]);
+  const ioTranslateY = useTransform(smoothY, [-0.5, 0.5], [-12, 12]);
+
+  // Movimiento opuesto sutil para los textos (sensación de profundidad 3D)
+  const textTranslateX = useTransform(smoothX, [-0.5, 0.5], [14, -14]);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -49,82 +50,75 @@ export default function HeroInteractive({ onSelectTab, activeTab }: HeroProps) {
     <section 
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className="relative w-full rounded-[2.5rem] bg-gradient-to-b from-[#FFF3E3] via-[#FFE8D6] to-[#FFF9F2] border border-[#F3A261]/25 shadow-2xl shadow-[#E07A5F]/10 overflow-hidden flex flex-col items-center justify-between p-6 md:p-10 mb-10 perspective-[1000px]"
+      className="relative w-full min-h-[82vh] flex flex-col justify-between items-center overflow-hidden pt-4 pb-8 select-none"
     >
-      
-      {/* 1. Fondo vivo: Resplandor de calor pulsante */}
+      {/* 1. Fondo Atmosférico Cálido (Sin bordes rígidos) */}
       <motion.div
         animate={{
-          scale: [1, 1.1, 1],
-          opacity: [0.3, 0.5, 0.3],
+          scale: [1, 1.08, 1],
+          opacity: [0.35, 0.6, 0.35],
         }}
         transition={{
-          duration: 7,
+          duration: 9,
           repeat: Infinity,
           ease: "easeInOut",
         }}
-        className="absolute -top-20 w-[500px] h-[500px] rounded-full bg-gradient-to-tr from-[#F3A261]/40 to-[#E07A5F]/20 blur-3xl pointer-events-none"
+        className="absolute top-1/4 w-[650px] h-[650px] rounded-full bg-gradient-to-tr from-[#F3A261]/35 via-[#E07A5F]/20 to-transparent blur-3xl pointer-events-none -z-10"
       />
 
-      {/* 2. Textos del Lobby */}
-      <div className="relative z-20 text-center max-w-2xl mx-auto pointer-events-none">
+      {/* 2. Textos Flotantes (Profundidad superior) */}
+      <motion.div 
+        style={{ x: textTranslateX }}
+        className="relative z-10 text-center max-w-2xl px-4 pointer-events-none mt-2"
+      >
         <motion.div
-          initial={{ opacity: 0, y: -8 }}
+          initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/80 backdrop-blur-md border border-[#E07A5F]/20 text-xs font-bold text-[#E07A5F] mb-3 shadow-xs"
+          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/70 backdrop-blur-md border border-[#E07A5F]/20 text-xs font-bold text-[#E07A5F] mb-3 shadow-xs"
         >
           <Sparkles className="w-3.5 h-3.5 text-[#F3A261] animate-spin" />
-          <span>El Mostrador de Io</span>
+          <span>El Mostrador de Autor</span>
         </motion.div>
 
-        <motion.h2
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1, duration: 0.5 }}
-          className="text-3xl md:text-5xl font-black tracking-tight text-[#2C2420] leading-tight"
-        >
+        <h2 className="text-3xl md:text-5xl lg:text-6xl font-black tracking-tight text-[#2C2420] leading-[1.1]">
           Pan crujiente, alma lenta y la calidez de{" "}
-          <span className="text-[#E07A5F] underline decoration-[#F3A261]/40 decoration-wavy">
+          <span className="text-[#E07A5F] underline decoration-[#F3A261]/50 decoration-wavy">
             Io
           </span>
-        </motion.h2>
-      </div>
+        </h2>
+      </motion.div>
 
-      {/* 3. Escenario 3D Interactivo con Io */}
+      {/* 3. Escenario de Io: Personaje Recortado a Escala Real */}
       <motion.div
         style={{
-          rotateX,
-          rotateY,
-          x: translateX,
-          y: translateY,
-          transformStyle: "preserve-3d",
+          rotate: ioRotate,
+          x: ioTranslateX,
+          y: ioTranslateY,
         }}
-        className="relative z-10 my-6 w-full max-w-lg aspect-square md:aspect-[4/3] rounded-3xl overflow-hidden border-4 border-white/90 shadow-2xl bg-[#FFE4CE] flex items-end justify-center group"
+        className="relative w-full max-w-2xl h-[440px] md:h-[540px] lg:h-[600px] flex items-end justify-center pointer-events-none z-20 my-auto"
       >
-        {/* Imagen principal de Io generada por Morgan */}
-        <Image
-          src="/images/io-baker.png"
-          alt="Io la Panadera en el mostrador"
-          fill
-          priority
-          className="object-cover object-center filter contrast-[1.03] brightness-[1.01] transition-transform duration-700 group-hover:scale-105"
-        />
+        {/* Silueta PNG de Io */}
+        <div className="relative w-full h-full drop-shadow-[0_20px_35px_rgba(224,122,95,0.22)]">
+          <Image
+            src="/images/io-cutout.png"
+            alt="Io la Panadera"
+            fill
+            priority
+            className="object-contain object-bottom filter contrast-[1.02] brightness-[1.01]"
+          />
+        </div>
 
-        {/* Viñeta cálida en los bordes para fundir la imagen con la interfaz */}
-        <div className="absolute inset-0 pointer-events-none shadow-[inset_0_0_60px_rgba(255,243,227,0.7)]" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#2C2420]/40 via-transparent to-transparent pointer-events-none" />
-
-        {/* Badge flotante dinámico */}
-        <div className="absolute bottom-4 z-20 bg-white/90 backdrop-blur-md px-4 py-1.5 rounded-full border border-white/80 shadow-md flex items-center gap-2 text-xs font-extrabold text-[#2C2420]">
+        {/* Badge flotante sutil a los pies de la bandeja */}
+        <div className="absolute bottom-6 bg-white/90 backdrop-blur-md px-4 py-1.5 rounded-full border border-white/80 shadow-lg flex items-center gap-2 text-xs font-extrabold text-[#2C2420] pointer-events-auto">
           <span className="w-2 h-2 rounded-full bg-green-500 animate-ping" />
-          {activeTab === "recetas" && "¡Hojaldres recién salidos!"}
-          {activeTab === "historia" && "Revisando el cuaderno de notas"}
-          {activeTab === "apoyar" && "Agradeciendo cada cafecito"}
+          {activeTab === "recetas" && "¡Hojaldres recién horneados!"}
+          {activeTab === "historia" && "Anotando secretos de masa madre"}
+          {activeTab === "apoyar" && "Un cafecito para el taller"}
         </div>
       </motion.div>
 
-      {/* 4. Barra de navegación elástica */}
-      <div className="relative z-20 w-full max-w-md bg-white/80 backdrop-blur-xl p-1.5 rounded-full border border-white/90 shadow-lg shadow-[#E07A5F]/5 flex items-center justify-between">
+      {/* 4. Navegación en Pastilla Flotante (Base del Escenario) */}
+      <div className="relative z-30 w-full max-w-md bg-white/85 backdrop-blur-xl p-1.5 rounded-full border border-white/90 shadow-xl shadow-[#E07A5F]/10 flex items-center justify-between">
         {TABS.map((tab) => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;
@@ -152,7 +146,6 @@ export default function HeroInteractive({ onSelectTab, activeTab }: HeroProps) {
           );
         })}
       </div>
-
     </section>
   );
 }
