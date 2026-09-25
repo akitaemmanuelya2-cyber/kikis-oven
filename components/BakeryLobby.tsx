@@ -133,11 +133,11 @@ export default function BakeryLobby({
         </nav>
       </header>
 
-      {/* 2. Escenario Central con Io en Escala Completa */}
+      {/* 2. Escenario Central */}
       <main className="relative flex-1 w-full max-w-7xl mx-auto px-6 md:px-12 flex items-center">
         
-        {/* Columna Izquierda Editorial */}
-        <div className="relative z-20 w-full md:w-1/2 max-w-xl flex flex-col items-start justify-center">
+        {/* Columna Izquierda Editorial (Texto libre y sin solapamiento) */}
+        <div className="relative z-20 w-full md:w-1/2 max-w-lg flex flex-col items-start justify-center">
           
           <div className="inline-flex items-center gap-2 bg-[#E07A5F]/10 border border-[#E07A5F]/20 px-3.5 py-1.5 rounded-full mb-6">
             <Wheat className="w-3.5 h-3.5 text-[#E07A5F]" />
@@ -175,10 +175,10 @@ export default function BakeryLobby({
         </div>
 
         {/* 
-          Columna Derecha: Io ocupa exactamente el área roja
-          Anclada al fondo y escalada a casi toda la altura de la pantalla (96vh)
+          Io desplazada a la derecha de la pantalla:
+          Mantiene exactamente sus 96vh de altura pero posicionada hacia el lateral derecho
         */}
-        <div className="absolute right-[-8vw] sm:right-[-4vw] md:right-[2vw] lg:right-[6vw] bottom-0 h-[88vh] md:h-[96vh] flex items-end justify-center pointer-events-none z-10">
+        <div className="absolute right-[-15vw] sm:right-[-8vw] md:right-[-2vw] lg:right-[3vw] bottom-0 h-[88vh] md:h-[96vh] flex items-end justify-center pointer-events-none z-10 translate-x-[15%] md:translate-x-[20%]">
           <canvas
             ref={canvasRef}
             className="h-full w-auto max-w-none object-contain object-bottom drop-shadow-[0_30px_50px_rgba(224,122,95,0.28)]"
