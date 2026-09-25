@@ -22,70 +22,97 @@ export default function BakeryLobby({
     const canvas = canvasRef.current;
     if (!video || !canvas) return;
 
-    let animationFrameId: number;
+    let isSubscribed = true;
+    let animId: number;
 
-    const renderLoop = () => {
-      if (video.readyState >= 2) {
-        const ctx = canvas.getContext("2d", { willReadFrequently: true });
-        if (ctx) {
-          if (canvas.width !== video.videoWidth && video.videoWidth > 0) {
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-          }
+    const ctx = canvas.getContext("2d", { willReadFrequently: true });
 
-          ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-          const frame = ctx.getImageData(0, 0, canvas.width, canvas.height);
-          const data = frame.data;
+    const processFrame = () => {
+      if (!isSubscribed || !video || !canvas || !ctx) return;
 
-          // Algoritmo de Chroma Key con Despill inteligente
-          for (let i = 0; i < data.length; i += 4) {
-            const r = data[i];
-            const g = data[i + 1];
-            const b = data[i + 2];
-
-            const maxRB = Math.max(r, b);
-            const greenDiff = g - maxRB;
-
-            // 1. Fondo verde neón puro (incluye la zona de marcas de agua) -> Transparencia 100%
-            if (g > 80 && greenDiff > 30) {
-              data[i + 3] = 0;
-            } 
-            // 2. Bordes y antialiasing (elimina el halo "Gasparín" sin cortar pelo ni ropa)
-            else if (greenDiff > 8) {
-              data[i + 1] = maxRB; // Suprime el reflejo verde
-              data[i + 3] = Math.max(0, 255 - greenDiff * 5);
-            }
-          }
-
-          ctx.putImageData(frame, 0, 0);
+      if (video.readyState >= 2 && video.videoWidth > 0) {
+        if (canvas.width !== video.videoWidth) {
+          canvas.width = video.videoWidth;
+          canvas.height = video.videoHeight;
         }
+
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const frame = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const data = frame.data;
+
+        // Algoritmo Despill + Chroma Key
+        for (let i = 0; i < data.length; i += 4) {
+          const r = data[i];
+          const g = data[i + 1];
+          const b = data[i + 2];
+
+          const maxRB = Math.max(r, b);
+          const greenDiff = g - maxRB;
+
+          // 1. Fondo verde neón puro -> Transparente
+          if (g > 80 && greenDiff > 30) {
+            data[i + 3] = 0;
+          } 
+          // 2. Despill para eliminar halo residual
+          else if (greenDiff > 8) {
+            data[i + 1] = maxRB;
+            data[i + 3] = Math.max(0, 255 - greenDiff * 5);
+          }
+        }
+
+        ctx.putImageData(frame, 0, 0);
       }
 
-      animationFrameId = requestAnimationFrame(renderLoop);
+      // Uso preferente de requestVideoFrameCallback si está disponible en el navegador
+      if ("requestVideoFrameCallback" in video) {
+        (video as any).requestVideoFrameCallback(processFrame);
+      } else {
+        animId = requestAnimationFrame(processFrame);
+      }
     };
 
-    video.play().catch(() => {
-      // Manejo de reproducción automática silenciada
-    });
+    // Asegurar reproducción automática
+    const startPlayback = () => {
+      video.play().then(() => {
+        if ("requestVideoFrameCallback" in video) {
+          (video as any).requestVideoFrameCallback(processFrame);
+        } else {
+          animId = requestAnimationFrame(processFrame);
+        }
+      }).catch((err) => {
+        console.warn("Autoplay bloqueado temporalmente por navegador:", err);
+      });
+    };
 
-    animationFrameId = requestAnimationFrame(renderLoop);
+    if (video.readyState >= 3) {
+      startPlayback();
+    } else {
+      video.addEventListener("canplay", startPlayback, { once: true });
+    }
 
     return () => {
-      cancelAnimationFrame(animationFrameId);
+      isSubscribed = false;
+      cancelAnimationFrame(animId);
+      video.removeEventListener("canplay", startPlayback);
     };
   }, []);
 
   return (
     <section className="relative w-screen h-screen overflow-hidden bg-gradient-to-b from-[#FFF5EA] via-[#FFEBD7] to-[#FFF9F2] flex flex-col justify-between select-none">
-      {/* Video fuente en memoria */}
+      
+      {/* 
+        Video fuera de pantalla (sin 'hidden' ni 'display: none') 
+        para garantizar que la GPU y el motor de render decodifiquen los fotogramas
+      */}
       <video
         ref={videoRef}
-        src="/videos/io-lobby-loop.mp4"
+        src="/videos/io-lobby-loop.mp4?v=3"
         autoPlay
         loop
         muted
         playsInline
-        className="hidden"
+        crossOrigin="anonymous"
+        className="fixed -left-[9999px] -top-[9999px] w-10 h-10 opacity-0 pointer-events-none"
       />
 
       {/* 1. Header flotante */}
