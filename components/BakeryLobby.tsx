@@ -95,10 +95,10 @@ export default function BakeryLobby({
   return (
     <section className="relative w-screen h-screen overflow-hidden bg-gradient-to-b from-[#FFF5EA] via-[#FFEBD7] to-[#FFF9F2] flex flex-col justify-between select-none">
       
-      {/* Video fuente oculto fuera de pantalla */}
+      {/* Video fuente en memoria */}
       <video
         ref={videoRef}
-        src="/videos/io-lobby-loop.mp4?v=5"
+        src="/videos/io-lobby-loop.mp4?v=6"
         autoPlay
         loop
         muted
@@ -133,13 +133,12 @@ export default function BakeryLobby({
         </nav>
       </header>
 
-      {/* 2. Escenario Central Asimétrico (MotionSites Style) */}
-      <main className="relative flex-1 w-full max-w-7xl mx-auto px-6 md:px-12 flex flex-col md:flex-row items-center justify-between">
+      {/* 2. Escenario Central con Io en Escala Completa */}
+      <main className="relative flex-1 w-full max-w-7xl mx-auto px-6 md:px-12 flex items-center">
         
-        {/* Columna Izquierda: Información Editorial y Acción */}
-        <div className="relative z-20 w-full md:w-1/2 flex flex-col items-start justify-center pt-8 md:pt-0">
+        {/* Columna Izquierda Editorial */}
+        <div className="relative z-20 w-full md:w-1/2 max-w-xl flex flex-col items-start justify-center">
           
-          {/* Badge artesanal superior */}
           <div className="inline-flex items-center gap-2 bg-[#E07A5F]/10 border border-[#E07A5F]/20 px-3.5 py-1.5 rounded-full mb-6">
             <Wheat className="w-3.5 h-3.5 text-[#E07A5F]" />
             <span className="text-[11px] font-black uppercase tracking-wider text-[#E07A5F]">
@@ -158,7 +157,6 @@ export default function BakeryLobby({
             Descubre el arte de la masa madre, hornea pan artesanal con recetas vivas y acompaña a Io en su rutina diaria de panadería.
           </p>
 
-          {/* Fila de acción y detalles */}
           <div className="mt-8 flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full sm:w-auto">
             <button
               onClick={onEnterKitchen}
@@ -176,11 +174,14 @@ export default function BakeryLobby({
           </div>
         </div>
 
-        {/* Columna Derecha: Io en Gran Escala (+30% de tamaño) */}
-        <div className="relative z-10 w-full md:w-7/12 h-[60vh] md:h-[95vh] flex items-end justify-center md:justify-end pointer-events-none -mb-4 md:-mb-8">
+        {/* 
+          Columna Derecha: Io ocupa exactamente el área roja
+          Anclada al fondo y escalada a casi toda la altura de la pantalla (96vh)
+        */}
+        <div className="absolute right-[-8vw] sm:right-[-4vw] md:right-[2vw] lg:right-[6vw] bottom-0 h-[88vh] md:h-[96vh] flex items-end justify-center pointer-events-none z-10">
           <canvas
             ref={canvasRef}
-            className="w-full h-full max-h-[105vh] object-contain object-bottom scale-110 md:scale-130 origin-bottom drop-shadow-[0_30px_45px_rgba(224,122,95,0.28)]"
+            className="h-full w-auto max-w-none object-contain object-bottom drop-shadow-[0_30px_50px_rgba(224,122,95,0.28)]"
           />
         </div>
 
