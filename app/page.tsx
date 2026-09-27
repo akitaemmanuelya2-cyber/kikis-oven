@@ -7,7 +7,7 @@ import {
   Scale, ChefHat, PartyPopper, RotateCcw, ThermometerSun,
   Heart, Coffee, BookOpen, ArrowLeft
 } from "lucide-react";
-import { RECETAS_BRUJITOS, Receta } from "../data/recipes";
+import { RECETAS_LIA, Receta } from "../data/recipes";
 import GhibliAtmosphere from "../components/GhibliAtmosphere";
 import BakeryLobby from "../components/BakeryLobby";
 
@@ -15,7 +15,7 @@ export default function Home() {
   const [escenaActiva, setEscenaActiva] = useState<"lobby" | "cocina">("lobby");
   const [modalAbierto, setModalAbierto] = useState<"historia" | "apoyar" | null>(null);
 
-  const [recetaActiva, setRecetaActiva] = useState<Receta>(RECETAS_BRUJITOS[0]);
+  const [recetaActiva, setRecetaActiva] = useState<Receta>(RECETAS_LIA[0]);
   const [pasoIndex, setPasoIndex] = useState(0);
   const [porcionesSeleccionadas, setPorcionesSeleccionadas] = useState<number>(12);
   const [vistaActiva, setVistaActiva] = useState<"pasos" | "ingredientes">("pasos");
@@ -86,7 +86,7 @@ export default function Home() {
 
             {/* Selector de Recetas */}
             <div className="flex gap-3 overflow-x-auto pb-2 relative z-10">
-              {RECETAS_BRUJITOS.map((receta) => (
+              {RECETAS_LIA.map((receta) => (
                 <button
                   key={receta.id}
                   onClick={() => {
