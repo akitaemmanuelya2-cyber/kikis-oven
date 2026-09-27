@@ -27,28 +27,27 @@ export default function BakeryLobby({
         <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/20 pointer-events-none" />
       </div>
 
-      {/* STICKER ANIMADO DE LÍA EN LA VENTANA */}
-      {/* Ajusta los valores de 'top' y 'right' según la posición exacta de la ventana en tu video */}
-      <div className="absolute top-[28%] right-[18%] z-10 pointer-events-none hidden md:block">
-        <motion.div
-          animate={{
-            y: [-4, 4, -4],
-            rotate: [-1, 1, -1],
-          }}
-          transition={{
-            duration: 4,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-          className="w-32 h-32 lg:w-40 lg:h-40 drop-shadow-2xl opacity-90"
-        >
-          <img
-            src="/images/lia-avatar.png"
-            alt="Lía asomándose"
-            className="w-full h-full object-contain filter brightness-105"
-          />
-        </motion.div>
-      </div>
+      {/* STICKER ANIMADO DE LÍA - Ubicado justo debajo del botón de Apoyo */}
+<div className="absolute top-20 right-12 z-10 pointer-events-none hidden md:block">
+  <motion.div
+    animate={{
+      y: [-3, 3, -3],
+      rotate: [-2, 2, -2],
+    }}
+    transition={{
+      duration: 3.5,
+      repeat: Infinity,
+      ease: "easeInOut",
+    }}
+    className="w-24 h-24 lg:w-28 lg:h-28 drop-shadow-2xl opacity-95"
+  >
+    <img
+      src="/images/lia-avatar.png"
+      alt="Lía Chibi"
+      className="w-full h-full object-contain"
+    />
+  </motion.div>
+</div>
 
       {/* 1. Navbar flotante (Botón limpio sin miniatura) */}
       <nav className="relative z-20 flex items-center justify-between px-6 md:px-12 pt-6">
