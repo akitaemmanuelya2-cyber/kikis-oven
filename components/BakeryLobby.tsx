@@ -1,3 +1,6 @@
+import { motion } from "framer-motion";
+import { useState } from "react";
+
 interface LobbyProps {
   onEnterKitchen: () => void;
   onOpenStory: () => void;
@@ -9,6 +12,15 @@ export default function BakeryLobby({
   onOpenStory,
   onOpenDonate,
 }: LobbyProps) {
+  // Estado para animar el saltito de Lía al hacer clic en apoyar
+  const [isJumping, setIsJumping] = useState(false);
+
+  const handleSupportClick = () => {
+    setIsJumping(true);
+    setTimeout(() => setIsJumping(false), 800); // Duración del saltito
+    onOpenDonate();
+  };
+
   return (
     <section className="relative w-screen h-screen overflow-hidden flex flex-col justify-between select-none bg-stone-950">
       
@@ -34,7 +46,7 @@ export default function BakeryLobby({
           </span>
         </div>
 
-        {/* Enlaces y Botón de Apoyo */}
+        {/* Enlaces y Botón de Apoyo con Lía Chibi */}
         <div className="flex items-center gap-4">
           <button
             onClick={onOpenStory}
@@ -44,10 +56,23 @@ export default function BakeryLobby({
           </button>
           
           <button
-            onClick={onOpenDonate}
-            className="bg-amber-100/90 hover:bg-white text-stone-900 text-sm font-medium px-5 py-2.5 rounded-full backdrop-blur transition-all shadow-md flex items-center gap-2 cursor-pointer"
+            onClick={handleSupportClick}
+            className="relative bg-amber-100/90 hover:bg-white text-stone-900 text-sm font-medium px-5 py-2.5 rounded-full backdrop-blur transition-all shadow-md flex items-center gap-3 cursor-pointer group"
           >
-            <span>❤️ Apoyar a Lía y Gus</span>
+            {/* Miniatura Chibi de Lía con animación de salto */}
+            <motion.div 
+              animate={isJumping ? { y: [-4, -14, 0], scale: [1, 1.15, 1] } : { y: 0 }}
+              transition={{ duration: 0.4, ease: "easeInOut" }}
+              className="w-7 h-7 rounded-full overflow-hidden border border-amber-600/50 shadow-sm bg-amber-200 flex-shrink-0"
+            >
+              <img 
+                src="/images/lia-avatar.png" 
+                alt="Lía Chibi" 
+                className="w-full h-full object-cover"
+              />
+            </motion.div>
+
+            <span>❤️ Apoyar a Lía y a Gus</span>
           </button>
         </div>
       </nav>
