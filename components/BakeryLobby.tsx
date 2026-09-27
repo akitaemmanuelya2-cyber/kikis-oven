@@ -16,20 +16,18 @@ export default function BakeryLobby({
   return (
     <section className="relative w-screen h-screen overflow-hidden flex flex-col justify-between select-none bg-[#140F0D]">
       
-      {/* 0. Video de fondo inmersivo (Oscurito, cálido y cinematográfico) */}
-      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden bg-[#140F0D]">
+      {/* 0. Video de fondo inmersivo (Luminoso, cálido y nítido) */}
+      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
         <video
-          src="/videos/bakery-360-io.mp4"
+          src="/videos/lia-welcome-hero.mp4"
           autoPlay
           loop
           muted
           playsInline
-          className="w-full h-full object-cover scale-105 filter blur-[1.5px] opacity-80"
+          className="w-full h-full object-cover contrast-[1.06] saturate-[1.15]"
         />
-        {/* Velo degradado cálido para contraste editorial a la izquierda */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#140F0D]/90 via-[#140F0D]/55 to-[#140F0D]/30" />
-        {/* Viñeta perimetral suave para dar profundidad de cine */}
-        <div className="absolute inset-0 bg-radial from-transparent via-[#140F0D]/20 to-[#140F0D]/70 pointer-events-none" />
+        {/* Sutil viñeta inferior y superior únicamente para dar contraste al texto */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/20 pointer-events-none" />
       </div>
 
       {/* 1. Header flotante */}
