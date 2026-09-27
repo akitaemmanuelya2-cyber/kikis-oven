@@ -24,7 +24,7 @@ export interface Receta {
   pasos: PasoReceta[];
 }
 
-export const RECETAS_BRUJITOS: Receta[] = [
+export const RECETAS_LIA: Receta[] = [
   {
     id: "galletas-calabaza",
     titulo: "Galletas Especiadas de Calabaza",
@@ -47,7 +47,7 @@ export const RECETAS_BRUJITOS: Receta[] = [
         accion: "Batir mantequilla y azúcar moreno",
         detalle: "Bate enérgicamente hasta que la mezcla cambie de color a un dorado pálido y suave como crema pastelera.",
         colorAcento: "#F3A261",
-        videoUrl: "/animations/mantequilla-azucar.mp4", // Clip animado Ghibli local
+        videoUrl: "/animations/mantequilla-azucar.mp4",
       },
       {
         numero: 2,
@@ -56,7 +56,6 @@ export const RECETAS_BRUJITOS: Receta[] = [
         colorAcento: "#E28771",
         videoUrl: "/animations/pure-calabaza.mp4",
       },
-      // ... resto de pasos
       {
         numero: 3,
         accion: "Tamizar la harina en lluvia lenta",
@@ -67,17 +66,17 @@ export const RECETAS_BRUJITOS: Receta[] = [
       {
         numero: 4,
         accion: "Moldear y hornear a 180°C",
-        detalle: "Forma discos con pequeñas muescas de calabaza y llévalas al calor del horno hasta que los bordes doren ligeramente.",
+        detalle: "Forma discos con pequeñas muescas y llévalas al calor del horno hasta que los bordes doren ligeramente.",
         colorAcento: "#CDB4DB",
         videoUrl: "/animations/moldear-hornear.mp4",
       },
       {
-         numero: 5,
-         accion: "¡Horno listo y resultado mágico!",
-         detalle: "Las galletas doran su base mientras emanan un vapor cálido y hogareño. ¡Listas para disfrutar con Kiki!",
-         colorAcento: "#E28771",
-         videoUrl: "/animations/resultado-horno.mp4",
-}
+        numero: 5,
+        accion: "¡Horno listo y resultado mágico!",
+        detalle: "Las galletas doran su base mientras emanan un vapor cálido y hogareño. ¡Listas para disfrutar con Lía y Gus!",
+        colorAcento: "#E28771",
+        videoUrl: "/animations/resultado-horno.mp4",
+      }
     ],
   },
   {
@@ -86,7 +85,7 @@ export const RECETAS_BRUJITOS: Receta[] = [
     subtitulo: "Nubes crocantes por fuera y suaves por dentro con caritas de chocolate.",
     tiempo: "60 min",
     dificultad: "Media",
-    badge: "Especial Brujitos 👻",
+    badge: "Especial del Obrador 👻",
     porcionesBase: 12,
     ingredientes: [
       { nombre: "Claras de huevo frescas", cantidadBase: 100, unidad: "g" },
@@ -100,13 +99,14 @@ export const RECETAS_BRUJITOS: Receta[] = [
         accion: "Montar claras a punto de nieve",
         detalle: "Bate las claras con paciencia hasta levantar picos firmes y satinados como nieve fresca.",
         colorAcento: "#CDB4DB",
-        videoUrl: "https://assets.mixkit.co/videos/48858/48858-720.mp4",
+        videoUrl: "/animations/merengue-nieve.mp4",
       },
       {
         numero: 2,
         accion: "Manga pastelera y horneado suave",
         detalle: "Dibuja pequeños fantasmas cónicos sobre la bandeja y deshidrata a fuego muy bajo.",
         colorAcento: "#F3A261",
+        videoUrl: "/animations/horno-suave.mp4",
       },
     ],
   },
